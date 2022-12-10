@@ -1,9 +1,18 @@
 (ns practicallitest.core
   (:gen-class)
-  (:require [org.httpkit.server :as server]))
+  (:require [org.httpkit.server :as server]
+            [compojure.core :refer [defroutes GET POST]]
+            [compojure.route :refer [not-found]]
+            [ring.util.response :refer [response]]
+            [ring.handler.dump :refer [handle-dump]]))
 
 ;; Request handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def http-response-code
+  {:OK 200
+   :BAD 404
+   :MEH 444})
 
 (defn handler
   "A function that handles all requests from the server.
@@ -12,6 +21,30 @@
   {:status  200
    :headers {"Content-Type" "text/html"}
    :body    "<h1>Hello Clojure Server world!</h1>"})
+
+(defn hello-html
+  "A function that handles all requests from the server.
+  Arguments: `req` is a ring request hash-map
+  Return: ring response hash-map including :status :headers
+  and :body"
+  [request]
+  {:status (:OK http-response-code)
+   :headers {"Content-Type" "text/html"}
+   :body "<h1>Hello Clojure Server world!</h1>"})
+
+(defn hello-world
+  "A simple hello world handler,
+  using ring.util.response"
+  [_]
+  (response "Hello Clojure World, from ring response"))
+
+
+
+(defroutes webapp
+           (GET "/"               [] hello-html)
+           (GET "/hello-response" [] hello-world)
+           (GET "/request-info" [] handle-dump)
+           (not-found "<h1>Page not found</h1>"))
 
 
 ;; System
@@ -47,7 +80,7 @@
       :or   {ip   "0.0.0.0"
              port 8000}}]
   (println "INFO: Starting httpkit server - listening on: " (str "http://" ip ":" port))
-  (reset! server (server/run-server #'handler {:port port})))
+  (reset! server (server/run-server #'webapp {:port port})))
 
 
 
