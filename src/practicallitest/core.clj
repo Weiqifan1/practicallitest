@@ -49,11 +49,17 @@
                           [{:name "johnny-be-doomed" :high-score 1000001}
                            {:name "jenny-jetpack" :high-score 23452345}]})})
 
+(defn mypostend [inp]
+  {:headers {"Content-type" "application/json"}
+   :status (:OK http-response-code)
+   :body "mypostend"})
+
 (defroutes webapp
            (GET "/"               [] hello-html)
            (GET "/hello-response" [] hello-world)
            (GET "/scores"               [] scoreboard)
            (GET "/request-info" [] handle-dump)
+           (POST "/postend" [mypar] mypostend)
            (not-found "<h1>Page not found</h1>"))
 
 
