@@ -4,7 +4,8 @@
             [compojure.core :refer [defroutes GET POST]]
             [compojure.route :refer [not-found]]
             [ring.util.response :refer [response]]
-            [ring.handler.dump :refer [handle-dump]]))
+            [ring.handler.dump :refer [handle-dump]]
+            [clojure.data.json :as json]))
 
 ;; Request handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38,11 +39,20 @@
   [_]
   (response "Hello Clojure World, from ring response"))
 
-
+(defn scores
+  "Returns the current scoreboard as JSON"
+  [_]
+  (println "Calling the scoreboard handler...")
+  {:headers {"Content-type" "application/json"}
+   :status (:OK http-response-code)
+   :body (json/write-str {:players
+                          [{:name "johnny-be-doomed" :high-score 1000001}
+                           {:name "jenny-jetpack" :high-score 23452345}]})})
 
 (defroutes webapp
            (GET "/"               [] hello-html)
            (GET "/hello-response" [] hello-world)
+           (GET "/scores"               [] scores)
            (GET "/request-info" [] handle-dump)
            (not-found "<h1>Page not found</h1>"))
 

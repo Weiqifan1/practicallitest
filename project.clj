@@ -7,7 +7,8 @@
                  [http-kit "2.3.0"]
                  [compojure "1.7.0"]
                  [javax.servlet/servlet-api "2.5"]
-                 [ring "1.9.6"]]
+                 [ring "1.9.6"]
+                 [org.clojure/data.json "2.4.0"]]
   :repl-options {:init-ns practicallitest.core})
 
 ;
