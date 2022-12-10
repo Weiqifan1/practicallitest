@@ -39,7 +39,7 @@
   [_]
   (response "Hello Clojure World, from ring response"))
 
-(defn scores
+(defn scoreboard
   "Returns the current scoreboard as JSON"
   [_]
   (println "Calling the scoreboard handler...")
@@ -52,7 +52,7 @@
 (defroutes webapp
            (GET "/"               [] hello-html)
            (GET "/hello-response" [] hello-world)
-           (GET "/scores"               [] scores)
+           (GET "/scores"               [] scoreboard)
            (GET "/request-info" [] handle-dump)
            (not-found "<h1>Page not found</h1>"))
 
