@@ -5,7 +5,8 @@
             [compojure.route :refer [not-found]]
             [ring.util.response :refer [response]]
             [ring.handler.dump :refer [handle-dump]]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [cheshire.core :as jsonche]))
 
 ;; Request handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -48,6 +49,11 @@
    :body (json/write-str {:players
                           [{:name "johnny-be-doomed" :high-score 1000001}
                            {:name "jenny-jetpack" :high-score 23452345}]})})
+(defn request-body-map [request]
+  (-> request
+      :body
+      slurp
+      (jsonche/parse-string true)))
 
 (defn mypostend [inp]
   {:headers {"Content-type" "application/json"}
@@ -60,7 +66,26 @@
            (GET "/scores"               [] scoreboard)
            (GET "/request-info" [] handle-dump)
            (POST "/postend" [mypar] mypostend)
+           (POST "/test" request
+             (let [response (:text (request-body-map request))]
+               (print response)
+               {:status 200
+                :headers {"Content-Type" "application/json"}
+                :body {jsonche/encode {:json true
+                                       :response response}}}))
            (not-found "<h1>Page not found</h1>"))
+
+;POST http:// localhost:8000/test
+;{
+; "text" : "hello chr"
+; }
+;result =
+;[#object[cheshire.core$generate_string 0x52209095 "cheshire.core$generate_string@52209095"
+;         ] {
+;            :json     true,
+;            :response "hello chr"
+;            }
+; ]
 
 
 ;; System
