@@ -76,6 +76,7 @@
            (not-found "<h1>Page not found</h1>"))
 
 ;POST http:// localhost:8000/test
+;raw JSON
 ;{
 ; "text" : "hello chr"
 ; }
