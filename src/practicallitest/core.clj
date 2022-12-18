@@ -60,6 +60,9 @@
    :status (:OK http-response-code)
    :body "mypostend"})
 
+(defn text-to-response [inp]
+  (identity inp))
+
 (defroutes webapp
            (GET "/"               [] hello-html)
            (GET "/hello-response" [] hello-world)
@@ -69,10 +72,10 @@
            (POST "/test" request
              (let [response (:text (request-body-map request))]
                (print response)
-               {:status 200
+               {:status  200
                 :headers {"Content-Type" "application/json"}
-                :body {jsonche/encode {:json true
-                                       :response response}}}))
+                :body    {jsonche/encode {:json     true
+                                          :response (text-to-response response)}}}))
            (not-found "<h1>Page not found</h1>"))
 
 ;POST http:// localhost:8000/test

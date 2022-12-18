@@ -4,7 +4,29 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
-FIXME
+2022-12-18 12.02
+two endpoints: 
+
+1: 
+GET
+http://localhost:8000/ 
+result
+<h1>Hello Clojure Server world!</h1>
+
+2:
+POST
+http://localhost:8000/test
+body:
+{
+"text": "hello chr"
+}
+result:
+[#object[cheshire.core$generate_string 0x6f7db1df "cheshire.core$generate_string@6f7db1df"
+] {
+:json true,
+:response "hello chr"
+}
+]
 
 ## License
 
